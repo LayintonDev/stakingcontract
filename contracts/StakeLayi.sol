@@ -83,9 +83,11 @@ contract StakeLayi {
         // Transfer the tokens from the user to the contract
         IERC20(tokenAddress).transferFrom(msg.sender, address(this), _amount);
 
-        // Update the user's balance and stake start time
+        // Update the user's balance then update the stake start time if it is the first time staking
         balances[msg.sender] += _amount;
-        stakeTimes[msg.sender] = block.timestamp;
+        if (stakeTimes[msg.sender] == 0) {
+            stakeTimes[msg.sender] = block.timestamp;
+        }
 
         // Emit a successful stake event
         emit StakeSuccessful(msg.sender, _amount);
@@ -133,6 +135,10 @@ contract StakeLayi {
      * @return The balance of the contract in tokens.
      */
     function getContractBal() external view returns (uint) {
+        // Ensure only the owner can view the contract balance
+        if (msg.sender != owner) {
+            revert NotOwner();
+        }
         return IERC20(tokenAddress).balanceOf(address(this));
     }
 

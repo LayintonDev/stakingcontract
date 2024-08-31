@@ -65,9 +65,11 @@ contract StakeEther {
             revert ZeroValueNotAllowed();
         }
 
-        // Update the user's balance and stake start time
-        balances[msg.sender] += msg.value;
-        stakeTimes[msg.sender] = block.timestamp;
+        // Update the user's balance then update the stake start time if it is the first time staking
+        balances[msg.sender] += _amount;
+        if (stakeTimes[msg.sender] == 0) {
+            stakeTimes[msg.sender] = block.timestamp;
+        }
 
         // Emit a successful stake event
         emit StakeSuccessful(msg.sender, msg.value);
