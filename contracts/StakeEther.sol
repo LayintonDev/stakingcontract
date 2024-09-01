@@ -66,7 +66,7 @@ contract StakeEther {
         }
 
         // Update the user's balance then update the stake start time if it is the first time staking
-        balances[msg.sender] += _amount;
+        balances[msg.sender] += msg.value;
         if (stakeTimes[msg.sender] == 0) {
             stakeTimes[msg.sender] = block.timestamp;
         }
